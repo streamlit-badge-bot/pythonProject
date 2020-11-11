@@ -5,7 +5,7 @@ import pandas as pd
 st.write(""""
 ## Datasets
 """)
-df = pd.read_csv('C:\\Users\\Muhammad Hazim\\PycharmProjects\\pythonProject\\bank.csv')
+df = pd.read_csv('bank.csv')
 st.dataframe(df)
 
 
