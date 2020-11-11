@@ -1,16 +1,16 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-sns.set()
 
 st.write(""""
 ## Datasets
 """)
-df = pd.read_csv('C:\\Users\\Muhammad Hazim\\PycharmProjects\\pythonProject\\bank.csv')
+df = pd.read_csv('bank.csv')
 st.dataframe(df)
 
+import matplotlib.pyplot as plt
+import seaborn as sns
+sns.set()
 
 st.write(""""
 ## Distribution of Target data
