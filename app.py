@@ -8,6 +8,9 @@ st.write(""""
 df = pd.read_csv('bank.csv')
 st.dataframe(df)
 
+import matplotlib.pyplot as plt
+import seaborn as sns
+sns.set()
 
 st.write(""""
 ## Distribution of Target data
