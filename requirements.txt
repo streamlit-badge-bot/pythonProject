@@ -1,5 +1,4 @@
 altair==4.1.0
-argon2-cffi @ file:///C:/ci/argon2-cffi_1596828585465/work
 astor==0.8.1
 async-generator==1.10
 attrs @ file:///tmp/build/80754af9/attrs_1604765588209/work
