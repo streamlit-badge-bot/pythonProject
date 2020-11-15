@@ -1,6 +1,27 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+import base64
+
+main_bg = "pink.jpg"
+main_bg_ext = "jpg"
+
+side_bg = "pink.jpg"
+side_bg_ext = "jpg"
+
+st.markdown(
+    f"""
+    <style>
+    .reportview-container {{
+        background: url(data:image/{main_bg_ext};base64,{base64.b64encode(open(main_bg, "rb").read()).decode()})
+    }}
+   .sidebar .sidebar-content {{
+        background: url(data:image/{side_bg_ext};base64,{base64.b64encode(open(side_bg, "rb").read()).decode()})
+    }}
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 st.write(""" # Malaysia Trade Dashboard Application """)
 st.write("Visualisation of Malaysia Trade datasets with only few clicks")
@@ -43,3 +64,4 @@ def get_user_input():
             multiple_graph(columns[0], columns[1], i, columns[2], j, sort)
 
 get_user_input()
+
