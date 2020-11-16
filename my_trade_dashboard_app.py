@@ -36,7 +36,7 @@ df = raw_df.dropna()
 def single_graph_bar(column,sort):
     fig, ax = plt.subplots(1, 1)
     if (column == 'COUNTRY') or (column == 'SITC 2 DIGIT'):
-        k = st.slider('Top:', 1, np.df[column].nunique(), 10, key='22')
+        k = st.slider('Top:', 1, df[column].nunique(), 10, key='22')
         df.groupby(column).agg({'IMPORT (RM)': 'sum', 'EXPORT (RM)': 'sum'}).sort_values(by=sort, ascending=False).iloc[:k].plot(kind='bar', ax=ax)
     else:
         df.groupby(column).agg({'IMPORT (RM)': 'sum', 'EXPORT (RM)': 'sum'}).sort_values(by=sort, ascending=False).plot(kind='bar', ax=ax)
@@ -169,7 +169,7 @@ def barh_graph():
 
 
 def plot_graph():
-    graph = st.selectbox('Type of graph:', ['Line', 'Bar-Vertical', 'Bar-Horizontal'])
+    graph = st.selectbox('Type of graph:', ['Time-Series', 'Bar-Vertical', 'Bar-Horizontal'])
     if graph == 'Bar-Vertical':
         bar_graph()
     elif graph == 'Bar-Horizontal':
