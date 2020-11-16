@@ -26,8 +26,8 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.write(""" # Malaysia Trade Dashboard Application """)
-st.write("Visualisation of Malaysia Trade datasets with only few clicks")
+st.write(""" # Malaysia's Trade Perfomance Dashboard Application """)
+st.write("Instant Dashboard of Malaysia's Trade Perfomance")
 
 raw_df = pd.read_csv('trade.csv')
 df = raw_df.dropna()
@@ -104,7 +104,7 @@ def multiple_graph_line(column_1, i, column_2, j):
 
 def bar_graph():
     columns = []
-    columns = st.multiselect('Feature(s):', ['YEAR', 'COUNTRY', 'SITC 1 DIGIT', 'SITC 2 DIGIT'], default = ['YEAR'], key = '1')
+    columns = st.multiselect('Feature(s):', ['YEAR', 'COUNTRY', 'SITC 1 DIGIT', 'SITC 2 DIGIT'],  key = '1')
     try:
         if ('SITC 1 DIGIT' in columns) & ('SITC 2 DIGIT' in columns):
             st.write("You may only choose either one of SITC 1 DIGIT and SITC 2 DIGIT")
@@ -117,7 +117,7 @@ def bar_graph():
                 sort = st.selectbox('Sort by:', ['IMPORT (RM)', 'EXPORT (RM)'], key='4')
                 bi_graph_bar(columns[0], columns[1], i, sort)
             elif len(columns) == 3:
-                i = st.selectbox(columns[1] + ':', np.sort(df[columns[1]]).unique(), key='5')
+                i = st.selectbox(columns[1] + ':', np.sort(df[columns[1]].unique()), key='5')
                 j = st.selectbox(columns[2] + ':', np.sort(df[columns[2]].unique()), key='6')
                 sort = st.selectbox('Sort by:', ['IMPORT (RM)', 'EXPORT (RM)'], key='7')
                 multiple_graph_bar(columns[0], columns[1], i, columns[2], j, sort)
@@ -147,7 +147,7 @@ def line_graph():
 
 def barh_graph():
     columns = []
-    columns = st.multiselect('Feature(s):', ['YEAR', 'COUNTRY', 'SITC 1 DIGIT', 'SITC 2 DIGIT'], default = ['YEAR'], key ='12')
+    columns = st.multiselect('Feature(s):', ['YEAR', 'COUNTRY', 'SITC 1 DIGIT', 'SITC 2 DIGIT'], key ='12')
     try:
         if ('SITC 1 DIGIT' in columns) & ('SITC 2 DIGIT' in columns):
             st.write("You may only choose either one of SITC 1 DIGIT and SITC 2 DIGIT")
@@ -167,14 +167,68 @@ def barh_graph():
     except IndexError:
         st.error('No data available')
 
+def single_pie(column,k,sort):
+    pie = df.groupby(column).agg({'IMPORT (RM)': 'sum', 'EXPORT (RM)': 'sum'}).sort_values(by=sort, ascending=False)
+    q = pie[sort].quantile((len(pie) - k) / (len(pie)))
+    df1 = pie.reset_index()
+    df1.loc[df1[sort] < q, column] = 'OTHERS'
+    fig, ax = plt.subplots(1, 1)
+    df1.groupby(column).agg({'IMPORT (RM)': 'sum', 'EXPORT (RM)': 'sum'}).plot.pie(y=sort, autopct='%1.1f%%', ax = ax, figsize=(15,10))
+    st.pyplot(fig)
+
+
+def bi_pie(column_1, k, column_2, i, sort):
+    pie = df[df[column_2] == i].groupby(column_1).agg({'IMPORT (RM)': 'sum', 'EXPORT (RM)': 'sum'}).sort_values(by=sort, ascending=False)
+    q = pie[sort].quantile((len(pie) - k) / (len(pie)))
+    df1 = pie.reset_index()
+    df1.loc[df1[sort] < q, column_1] = 'OTHERS'
+    fig, ax = plt.subplots(1, 1)
+    df1.groupby(column_1).agg({'IMPORT (RM)': 'sum', 'EXPORT (RM)': 'sum'}).plot.pie(y=sort, autopct='%1.1f%%', ax=ax,figsize=(15, 10), title = 'Pie chart of ' + column_1 + ' in '+ column_2 + ': ' + str(i))
+    st.pyplot(fig)
+
+
+
+def multiple_pie(column_1, k, column_2, i, column_3, j, sort):
+    pie = df[(df[column_2] == i) & (df[column_3] == j)].groupby(column_1).agg({'IMPORT (RM)': 'sum', 'EXPORT (RM)': 'sum'}).sort_values(by=sort, ascending=False)
+    q = pie[sort].quantile((len(pie) - k) / (len(pie)))
+    df1 = pie.reset_index()
+    df1.loc[df1[sort] < q, column_1] = 'OTHERS'
+    fig, ax = plt.subplots(1, 1)
+    df1.groupby(column_1).agg({'IMPORT (RM)': 'sum', 'EXPORT (RM)': 'sum'}).plot.pie(y=sort, autopct='%1.1f%%', ax=ax,figsize=(15, 10), title = 'Pie chart of ' + column_1 + ' in '+ column_2 + ': ' + str(i) + ' and '+ column_3 + ': ' + str(j))
+    st.pyplot(fig)
+
+def pie_graph():
+    columns = []
+    columns = st.multiselect('Feature(s):', ['YEAR', 'COUNTRY', 'SITC 1 DIGIT', 'SITC 2 DIGIT'], key = '30')
+    k = st.slider('Top:',1, 20, 5, key='31')
+    try:
+        if ('SITC 1 DIGIT' in columns) & ('SITC 2 DIGIT' in columns):
+            st.write("You may only choose either one of SITC 1 DIGIT and SITC 2 DIGIT")
+        else:
+            if len(columns) == 1:
+                sort = st.selectbox('Sort by:', ['IMPORT (RM)', 'EXPORT (RM)'], key='32')
+                single_pie(columns[0], k, sort)
+            elif len(columns) == 2:
+                i = st.selectbox(columns[1] + ':', np.sort(df[columns[1]].unique()), key='33')
+                sort = st.selectbox('Sort by:', ['IMPORT (RM)', 'EXPORT (RM)'], key='34')
+                bi_pie(columns[0], k, columns[1], i, sort)
+            elif len(columns) == 3:
+                i = st.selectbox(columns[1] + ':', np.sort(df[columns[1]].unique()), key='35')
+                j = st.selectbox(columns[2] + ':', np.sort(df[columns[2]].unique()), key='36')
+                sort = st.selectbox('Sort by:', ['IMPORT (RM)', 'EXPORT (RM)'], key='37')
+                multiple_pie(columns[0],k, columns[1], i, columns[2], j, sort)
+    except ValueError:
+        st.error('No data available')
 
 def plot_graph():
-    graph = st.selectbox('Type of graph:', ['Time-Series', 'Bar-Vertical', 'Bar-Horizontal'])
+    graph = st.selectbox('Type of graph:', ['Time-Series', 'Bar-Vertical', 'Bar-Horizontal', 'Pie Chart'])
     if graph == 'Bar-Vertical':
         bar_graph()
     elif graph == 'Bar-Horizontal':
         barh_graph()
-    else:
+    elif graph == 'Time-Series':
         line_graph()
+    else:
+        pie_graph()
 
 plot_graph()
