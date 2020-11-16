@@ -62,7 +62,7 @@ def bi_graph_bar(column_1, column_2, i, sort):
         k = st.slider('Top:', 1, df[column_1].nunique(), 10, key='23')
         df[df[column_2] == i].groupby(column_1).agg({'IMPORT (RM)': 'sum', 'EXPORT (RM)': 'sum'}).sort_values(by=sort, ascending=False).iloc[:k].plot(kind='bar', ax=ax, title=column_2 + ': ' + str(i));
     else:
-        df[df[column_2] == i].groupby(column_1).agg({'IMPORT (RM)': 'sum', 'EXPORT (RM)': 'sum'}).sort_values(by=sort, ascending=False).plot(kind='barh', ax=ax, title=column_2 + ': ' + str(i));
+        df[df[column_2] == i].groupby(column_1).agg({'IMPORT (RM)': 'sum', 'EXPORT (RM)': 'sum'}).sort_values(by=sort, ascending=False).plot(kind='bar', ax=ax, title=column_2 + ': ' + str(i));
     st.pyplot(fig)
 
 def bi_graph_barh(column_1, column_2, i, sort):
